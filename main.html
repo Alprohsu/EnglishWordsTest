@@ -542,11 +542,11 @@
             updateWordDisplay();
             generateCards();
             
-            // (3) 載完該頁面2秒後先自動播放此單字的發音
+            // (3) 載完該頁面1秒後先自動播放此單字的發音
             clearTimeout(autoPlayTimeout); // 清除舊的計時器
             autoPlayTimeout = setTimeout(() => {
                 playAudio();
-            }, 2000); // 2秒後播放
+            }, 1000); // 1秒後播放
         }
 
         // 更新單字顯示
