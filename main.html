@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Words Test</title>
+    <title>Words Test - 櫻花生動版</title>
     <style>
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Arial', sans-serif;
+            font-family: 'Arial', 'Microsoft JhengHei', sans-serif;
         }
         body, html {
             width: 100%;
@@ -21,6 +21,7 @@
             height: 100%;
             display: none;
             flex-direction: column;
+            position: relative; /* 為了動態背景 */
         }
         .active {
             display: flex;
@@ -28,16 +29,51 @@
         
         /* ---------------- Page 1: 首頁 ---------------- */
         #page1 {
-            background-color: #FFB6C1; /* 淺粉紅色 */
+            background-color: #FFB6C1; /* 淺粉紅色底 */
+            overflow: hidden; /* 防止櫻花飄出 */
         }
+        
+        /* 落櫻動態底圖 CSS */
+        .cherry-blossom-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none; /* 不干擾使用者點擊 */
+            z-index: 1;
+        }
+        .petal {
+            position: absolute;
+            background-color: #fff1f3;
+            border-radius: 150% 0 150% 150%;
+            opacity: 0.8;
+            animation: fall linear infinite;
+        }
+        @keyframes fall {
+            0% { top: -10%; transform: translateX(0) rotate(0deg); }
+            100% { top: 110%; transform: translateX(100px) rotate(360deg); }
+        }
+        
+        /* 確保首頁內容在櫻花上方 */
+        .p1-content {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        
         .p1-row1 {
             height: 20%;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 2.5rem;
+            font-size: 2.8rem;
             font-weight: bold;
             color: black;
+            text-shadow: 1px 1px 2px rgba(255,255,255,0.7);
         }
         .p1-row2 {
             height: 5%;
@@ -47,6 +83,7 @@
             font-size: 1rem;
             color: black;
             text-align: center;
+            padding: 0 10px;
         }
         .p1-row3 {
             height: 50%;
@@ -55,20 +92,31 @@
         .p1-row3 textarea {
             width: 100%;
             height: 100%;
-            padding: 10px;
+            padding: 15px;
             font-size: 1.2rem;
             resize: none;
-            border-radius: 8px;
-            border: 1px solid #ccc;
+            border-radius: 12px;
+            border: 2px solid #ff99aa;
+            background-color: rgba(255,255,255,0.9);
+        }
+        .p1-row3 textarea:focus {
+            outline: none;
+            border-color: #ff6688;
         }
         .p1-row4 {
             height: 5%;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 0.9rem;
-            gap: 15px;
+            font-size: 1rem;
+            gap: 20px;
         }
+        .p1-row4 label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+        .p1-row4 input { margin-right: 5px; transform: scale(1.2); }
         .p1-row5 {
             height: 15%;
             display: flex;
@@ -76,13 +124,20 @@
             align-items: center;
         }
         .btn-start {
-            padding: 15px 40px;
-            font-size: 1.2rem;
+            padding: 15px 50px;
+            font-size: 1.3rem;
             background-color: white;
-            border: 2px solid black;
-            border-radius: 8px;
+            border: 2px solid #ff6688;
+            border-radius: 30px;
             cursor: pointer;
             font-weight: bold;
+            color: #ff6688;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: all 0.2s;
+        }
+        .btn-start:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
         /* ---------------- Page 2: 測驗頁 ---------------- */
@@ -95,7 +150,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 3rem;
+            font-size: 3.5rem;
             font-weight: bold;
             letter-spacing: 5px;
             color: black;
@@ -106,61 +161,73 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 1.5rem;
+            font-size: 1.6rem;
             color: black;
             position: relative;
-            border-top: 1px dashed #fff;
+            border-top: 2px dashed #fff;
+            gap: 10px; /* 調整文字與喇叭的間距 */
         }
+        
+        /* 喇叭按鈕樣式修改 */
         .speaker-btn {
-            position: absolute;
-            right: 20px;
             background: none;
             border: none;
-            font-size: 1.8rem;
+            font-size: 2rem;
             cursor: pointer;
+            color: black;
+            opacity: 0.8;
+            transition: opacity 0.2s;
         }
+        .speaker-btn:active { opacity: 1; }
+        
         .p2-row3 {
             height: 40%;
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             grid-template-rows: repeat(2, 1fr);
-            gap: 10px;
-            padding: 15px;
+            gap: 12px;
+            padding: 20px;
         }
         .char-card {
-            background-color: #f0f0f0;
-            border: 2px solid #ccc;
-            border-radius: 8px;
+            background-color: #f8f8f8;
+            border: 2px solid #ddd;
+            border-radius: 12px;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 2rem;
+            font-size: 2.2rem;
             font-weight: bold;
+            color: #333;
             cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            transition: all 0.1s;
         }
         .char-card:active {
             background-color: #e0e0e0;
+            transform: scale(0.95);
         }
         .p2-row4 {
             height: 10%;
             display: flex;
-            padding: 10px;
-            gap: 10px;
+            padding: 10px 20px;
+            gap: 15px;
         }
         .btn-clear {
             flex: 1;
-            background-color: darkblue;
+            background-color: #1a237e; /* 深藍色 */
             color: white;
             font-size: 1.2rem;
+            font-weight: bold;
             border: none;
             border-radius: 8px;
             cursor: pointer;
         }
         .btn-submit {
             flex: 1;
-            background-color: red;
+            background-color: #d32f2f; /* 紅色 */
             color: white;
             font-size: 1.2rem;
+            font-weight: bold;
             border: none;
             border-radius: 8px;
             cursor: pointer;
@@ -180,16 +247,17 @@
         }
         .p3-top h1 {
             color: black;
-            font-size: 1.8rem;
+            font-size: 2rem;
         }
         .btn-home {
             background-color: #FFB6C1;
             color: black;
-            border: 1px solid black;
-            padding: 10px 20px;
-            border-radius: 8px;
+            border: 2px solid black;
+            padding: 12px 25px;
+            border-radius: 25px;
             cursor: pointer;
             font-weight: bold;
+            font-size: 1.1rem;
         }
         .p3-bottom {
             height: 80%;
@@ -200,20 +268,22 @@
             width: 100%;
             border-collapse: collapse;
             text-align: center;
+            font-size: 1rem;
         }
         .result-table th, .result-table td {
-            border: 1px solid #ccc;
-            padding: 10px 5px;
+            border: 1px solid #ddd;
+            padding: 12px 5px;
         }
         .result-table th {
-            background-color: #f9f9f9;
+            background-color: #f2f2f2;
+            font-weight: bold;
         }
 
         /* ---------------- 彈出視窗 (Modal) ---------------- */
         .modal-overlay {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.5);
+            background: rgba(0,0,0,0.6);
             display: none;
             justify-content: center;
             align-items: center;
@@ -222,48 +292,75 @@
         .modal-box {
             background: white;
             padding: 30px;
-            border-radius: 12px;
+            border-radius: 15px;
             text-align: center;
-            width: 80%;
-            max-width: 300px;
+            width: 85%;
+            max-width: 320px;
+            position: relative; /* 為煙花/彩帶定位 */
+            overflow: visible;
         }
         .modal-msg {
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             font-weight: bold;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
         .modal-btn {
-            padding: 10px 20px;
-            font-size: 1.1rem;
+            padding: 12px 24px;
+            font-size: 1.2rem;
             border: none;
             border-radius: 8px;
             cursor: pointer;
             color: white;
+            font-weight: bold;
         }
         .btn-correct { background-color: #4CAF50; }
         .btn-wrong { background-color: #f44336; }
         
-        /* 載入中遮罩 */
-        #loading {
-            color: white;
-            font-size: 1.5rem;
+        /* 彩帶動態 CSS */
+        .confetti-container {
+            position: absolute;
+            top: -50px;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
         }
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #f00;
+            opacity: 0;
+        }
+        @keyframes confetti-fall {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(200px) rotate(720deg); opacity: 0; }
+        }
+        
+        /* 載入中遮罩 */
+        #loadingOverlay { z-index: 2000; }
+        #loading { color: white; font-size: 1.5rem; text-align: center; }
     </style>
 </head>
 <body>
 
     <div id="page1" class="page active">
-        <div class="p1-row1">Words Test</div>
-        <div class="p1-row2">請輸入欲測驗的英文單字，每一個單字需換行區分。</div>
-        <div class="p1-row3">
-            <textarea id="wordInput" placeholder="apple&#10;banana&#10;orange"></textarea>
-        </div>
-        <div class="p1-row4">
-            <label><input type="radio" name="mode" value="random" checked> 隨機填空</label>
-            <label><input type="radio" name="mode" value="vowel"> 母音填空</label>
-        </div>
-        <div class="p1-row5">
-            <button class="btn-start" onclick="startTest()">開始測驗</button>
+        <div id="cherryContainer" class="cherry-blossom-container"></div>
+        
+        <div class="p1-content">
+            <div class="p1-row1">Words Test</div>
+            <div class="p1-row2">請輸入欲測驗的英文單字，每一個單字需換行區分。</div>
+            <div class="p1-row3">
+                <textarea id="wordInput" placeholder="apple&#10;banana&#10;orange"></textarea>
+            </div>
+            <div class="p1-row4">
+                <label><input type="radio" name="mode" value="random" checked> 隨機填空</label>
+                <label><input type="radio" name="mode" value="vowel"> 母音填空</label>
+            </div>
+            <div class="p1-row5">
+                <button class="btn-start" onclick="startTest()">開始測驗</button>
+            </div>
         </div>
     </div>
 
@@ -290,10 +387,10 @@
             <table class="result-table">
                 <thead>
                     <tr>
-                        <th>順序</th>
-                        <th>結果</th>
-                        <th>單字</th>
-                        <th>中文翻譯</th>
+                        <th width="15%">順序</th>
+                        <th width="15%">結果</th>
+                        <th width="35%">單字</th>
+                        <th width="35%">翻譯</th>
                     </tr>
                 </thead>
                 <tbody id="resultBody">
@@ -304,6 +401,7 @@
 
     <div id="modal" class="modal-overlay">
         <div class="modal-box">
+            <div id="confettiContainer" class="confetti-container"></div>
             <div id="modalMsg" class="modal-msg">訊息</div>
             <button id="modalBtn" class="modal-btn" onclick="handleModalAction()">按鈕</button>
         </div>
@@ -325,11 +423,33 @@
         let currentUserInputs = [];     // 紀錄使用者依序填入的字母
         let currentCorrectAnswers = []; // 正確填空字母陣列
         let modalActionType = '';       // 'next', 'finish', 'retry'
+        
+        // 自動發音計時器
+        let autoPlayTimeout;
 
-        // 基本字典 (避免外部 API 失敗的後備方案)
-        const fallbackDict = {
-            "apple": "蘋果", "banana": "香蕉", "cat": "貓", "dog": "狗", "book": "書"
-        };
+        // 初始化：生成首頁櫻花
+        createSakuraPetals();
+
+        // (1) 生成落櫻動態底圖
+        function createSakuraPetals() {
+            const container = document.getElementById('cherryContainer');
+            const petalCount = 30; // 櫻花數量
+            for (let i = 0; i < petalCount; i++) {
+                const petal = document.createElement('div');
+                petal.className = 'petal';
+                setPetalStyle(petal);
+                container.appendChild(petal);
+            }
+        }
+        
+        // 隨機設置櫻花樣式，增加活力
+        function setPetalStyle(petal) {
+            petal.style.left = Math.random() * 100 + '%';
+            petal.style.width = Math.random() * 10 + 10 + 'px';
+            petal.style.height = Math.random() * 8 + 8 + 'px';
+            petal.style.animationDuration = Math.random() * 3 + 4 + 's'; // 4~7秒下降
+            petal.style.animationDelay = Math.random() * 5 + 's'; // 隨機延遲開始
+        }
 
         // 切換頁面
         function showPage(pageId) {
@@ -337,20 +457,17 @@
             document.getElementById(pageId).classList.add('active');
         }
 
-        // 呼叫免費 API 取得翻譯 (模擬等待)
+        // 呼叫 API 取得翻譯
         async function fetchTranslation(word) {
             let cleanWord = word.trim().toLowerCase();
-            if (fallbackDict[cleanWord]) return fallbackDict[cleanWord];
             try {
-                // 使用免費 MyMemory API
+                // 使用免費 MyMemory API (限制較少，適合練習用)
                 let res = await fetch(`https://api.mymemory.translated.net/get?q=${cleanWord}&langpair=en|zh-TW`);
                 let data = await res.json();
                 if(data.responseData.translatedText) {
                     return data.responseData.translatedText;
                 }
-            } catch (e) {
-                console.warn("Translation API failed for:", word);
-            }
+            } catch (e) { console.warn("API failed for:", word); }
             return "查無翻譯"; 
         }
 
@@ -408,7 +525,6 @@
             } else {
                 // 隨機填空 1~3 個
                 let numBlanks = Math.floor(Math.random() * 3) + 1;
-                // 若單字太短，最多挖空長度的減一
                 numBlanks = Math.min(numBlanks, wordStr.length);
                 if (numBlanks === 0) numBlanks = 1;
 
@@ -425,9 +541,15 @@
             document.getElementById('testTranslationDisplay').innerText = wordObj.translation;
             updateWordDisplay();
             generateCards();
+            
+            // (3) 載完該頁面2秒後先自動播放此單字的發音
+            clearTimeout(autoPlayTimeout); // 清除舊的計時器
+            autoPlayTimeout = setTimeout(() => {
+                playAudio();
+            }, 2000); // 2秒後播放
         }
 
-        // 更新單字顯示 (底線與使用者輸入結合)
+        // 更新單字顯示
         function updateWordDisplay() {
             let wordStr = wordsData[currentIndex].original;
             let displayHTML = '';
@@ -448,20 +570,31 @@
             document.getElementById('testWordDisplay').innerText = displayHTML.trim();
         }
 
-        // 產生 8 張字卡 (包含正確解答 + 隨機字母)
+        // 產生 8 張字卡 (邏輯調整)
         function generateCards() {
-            let pool = [...currentCorrectAnswers];
-            const alphabet = "abcdefghijklmnopqrstuvwxyz";
+            const vowelsArr = ['a', 'e', 'i', 'o', 'u'];
+            let pool = [];
             
-            // 補足到 8 張
-            while (pool.length < 8) {
-                let r = alphabet[Math.floor(Math.random() * alphabet.length)];
-                pool.push(r);
+            if (currentMode === 'vowel') {
+                // (5) 母音模式下，8張字卡都需顯示母音字母提供選擇
+                // 為了呈現8張，母音(aeiou)會重複出現
+                pool = ['a', 'e', 'i', 'o', 'u']; // 確保至少有一組完整的aeiou
+                while(pool.length < 8) {
+                    let randomVowel = vowelsArr[Math.floor(Math.random() * vowelsArr.length)];
+                    pool.push(randomVowel);
+                }
+            } else {
+                // 隨機模式：包含正確解答 + 隨機字母
+                pool = [...currentCorrectAnswers];
+                const alphabet = "abcdefghijklmnopqrstuvwxyz";
+                while (pool.length < 8) {
+                    let r = alphabet[Math.floor(Math.random() * alphabet.length)];
+                    if (!pool.includes(r)) pool.push(r); // 盡量不要重複，增加難度
+                }
             }
-            // 截斷避免超過 8 張 (極端情況單字挖超過8個洞)
+            
+            // 截斷避免超過 8 張，並打亂
             pool = pool.slice(0, 8);
-
-            // 打亂陣列
             pool.sort(() => Math.random() - 0.5);
 
             let container = document.getElementById('cardContainer');
@@ -494,6 +627,9 @@
 
         // 作答按鈕
         function checkAnswer() {
+            // (答對時) 如果自動發音還沒放完，將計時器清除，避免吵雜
+            clearTimeout(autoPlayTimeout);
+
             if (currentUserInputs.length < currentMissingIndices.length) {
                 alert("請填滿所有空缺！");
                 return;
@@ -513,14 +649,58 @@
             }
 
             if (isCorrect) {
+                // (2) 『恭喜答對』加入彩帶效果
+                triggerConfetti();
                 showModal("恭喜答對！", currentIndex === test_words_total_num - 1 ? "全部結束" : "下一題", "correct");
             } else {
                 showModal("不對喔～再想想", "重新作答", "wrong");
             }
         }
+        
+        // (2) 在彈出視窗加入彩帶動態小圖
+        function triggerConfetti() {
+            const container = document.getElementById('confettiContainer');
+            container.innerHTML = ''; // 清空先前的彩帶
+            const confettiCount = 50;
+            const colors = ['#f44336', '#e91e63', '#9c27b0', '#3f51b5', '#2196f3', '#4CAF50', '#FFEB3B', '#FF9800'];
+            
+            for (let i = 0; i < confettiCount; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * 100 + '%';
+                confetti.style.top = Math.random() * -50 + 'px'; // 從 modal 頂部稍微上方處落下
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                
+                // 設置飛散動畫
+                const dropX = (Math.random() - 0.5) * 200; // 水平飛散
+                const dropY = Math.random() * 150 + 100; // 垂直下落
+                const duration = Math.random() * 1 + 1; // 1~2秒
+                
+                // 動態插入 animation 樣式
+                confetti.style.animation = `confetti-fall ${duration}s ease-out forwards`;
+                
+                // 利用這段小技巧讓不同彩帶飛不同方向
+                const customKeyframe = `@keyframes confetti-fall-${i} {
+                    0% { transform: translate(0, 0) rotate(0deg); opacity: 1; }
+                    100% { transform: translate(${dropX}px, ${dropY}px) rotate(${Math.random()*720}deg); opacity: 0; }
+                }`;
+                // 由於不能在 JS 直接寫內聯 @keyframes，這裡採用簡單統一的 CSS animation，只是讓它們 opacity 歸零
+                // 如果需要更複雜的煙花效果，建議使用 canvas 庫，這裡用純 CSS 實現輕量級彩帶落下效果。
+                
+                container.appendChild(confetti);
+            }
+            
+            // 統一使用 CSS 內的 @keyframes confetti-fall
+            document.querySelectorAll('.confetti').forEach((el, index) => {
+                el.style.animationName = 'confetti-fall';
+            });
+        }
 
         // 顯示彈出視窗
         function showModal(msg, btnText, type) {
+            // 如果是錯誤視窗，不顯示彩帶
+            document.getElementById('confettiContainer').style.display = (type === 'correct') ? 'block' : 'none';
+
             document.getElementById('modalMsg').innerText = msg;
             let btn = document.getElementById('modalBtn');
             btn.innerText = btnText;
@@ -547,14 +727,21 @@
             } else if (modalActionType === 'retry') {
                 currentUserInputs = [];
                 updateWordDisplay();
+                // 重新作答時，也自動播放一次
+                playAudio();
             }
         }
 
         // 播放發音
         function playAudio() {
-            let wordStr = wordsData[currentIndex].original;
+            let wordObj = wordsData[currentIndex];
+            if(!wordObj) return;
+            let wordStr = wordObj.original;
+            
+            // 使用 SpeechSynthesis API
             let utterance = new SpeechSynthesisUtterance(wordStr);
             utterance.lang = 'en-US';
+            utterance.rate = 0.9; // 稍微放慢一點點，聽得更清楚
             speechSynthesis.speak(utterance);
         }
 
@@ -566,13 +753,13 @@
                 let obj = wordsData[i];
                 let tr = document.createElement('tr');
                 let resultMark = obj.firstTryResult ? 'O' : 'X';
-                let color = obj.firstTryResult ? 'green' : 'red';
+                let color = obj.firstTryResult ? '#4CAF50' : '#f44336';
                 
                 tr.innerHTML = `
                     <td>${i + 1}</td>
-                    <td style="color: ${color}; font-weight: bold;">${resultMark}</td>
-                    <td>${obj.original}</td>
-                    <td>${obj.translation}</td>
+                    <td style="color: ${color}; font-weight: bold; font-size: 1.2rem;">${resultMark}</td>
+                    <td style="text-align: left; padding-left: 10px;">${obj.original}</td>
+                    <td style="text-align: left; padding-left: 10px;">${obj.translation}</td>
                 `;
                 tbody.appendChild(tr);
             }
@@ -581,6 +768,7 @@
         // 回到首頁
         function goHome() {
             document.getElementById('wordInput').value = '';
+            clearTimeout(autoPlayTimeout); // 確保停止任何自動發音計時
             showPage('page1');
         }
     </script>
